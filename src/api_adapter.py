@@ -20,18 +20,18 @@ class APIAdapter(APIBase):
 
         # Headers с user-agent - обязательный параметр при запросе к nominatim.openstreetmap.
         # Вы можете использовать любое название вместо test-app/1.0, например просто test-app.
-        headers_nominatim = {
+        headers = {
             "User-Agent": "test-app/1.0",
         }
 
         # Указываем параметры: в каком формате возвращать данные и максимальную длину списка стран в ответе.
-        params_nominatim = {
+        params = {
             "country": country,
             "format": "json",
             "limit": 1,
         }
 
-        response = get(url=self.openstreetmap_url, params=params_nominatim, headers=headers_nominatim)
+        response = get(url=self.openstreetmap_url, params=params, headers=headers)
         response.raise_for_status()
         data = response.json()
 
@@ -52,3 +52,30 @@ class APIAdapter(APIBase):
         response = get(url=self.opensky_url, params=params)
         response.raise_for_status()
         return response.json()
+
+    def get_country(self, country: str):
+        """
+        Получает границы страны.
+        """
+
+        headers = {"User-Agent": "test-app/1.0"}
+
+        params = {
+            "country": country,
+            "format": "json",
+            "limit": 1,
+        }
+
+        response = get(
+            url=self.openstreetmap_url,
+            params=params,
+            headers=headers
+        )
+
+        response.raise_for_status()
+        data = response.json()
+
+        if not data:
+            return None
+
+        return data[0].get("boundingbox")
