@@ -66,11 +66,7 @@ class APIAdapter(APIBase):
             "limit": 1,
         }
 
-        response = get(
-            url=self.openstreetmap_url,
-            params=params,
-            headers=headers
-        )
+        response = get(url=self.openstreetmap_url, params=params, headers=headers)
 
         response.raise_for_status()
         data = response.json()
